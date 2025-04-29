@@ -1,10 +1,8 @@
--- Database structure for Militaria Przemka
 
--- Create database
 CREATE DATABASE IF NOT EXISTS militaria_przemka;
 USE militaria_przemka;
 
--- Create categories table
+
 CREATE TABLE IF NOT EXISTS categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -12,7 +10,7 @@ CREATE TABLE IF NOT EXISTS categories (
     slug VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Create products table
+
 CREATE TABLE IF NOT EXISTS products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT NOT NULL,
@@ -27,7 +25,7 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE CASCADE
 );
 
--- Create users table for authentication
+
 CREATE TABLE IF NOT EXISTS users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -41,7 +39,7 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create orders table
+
 CREATE TABLE IF NOT EXISTS orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -51,7 +49,7 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
--- Create order_items table
+
 CREATE TABLE IF NOT EXISTS order_items (
     item_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
@@ -62,12 +60,12 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 
--- Insert categories
+
 INSERT INTO categories (name, description, slug) VALUES
 ('Broń krótka', 'Handguns including pistols and revolvers', 'handguns'),
 ('Broń długa', 'Long guns including rifles and shotguns', 'long-guns');
 
--- Insert products
+
 INSERT INTO products (category_id, name, description, price, stock, image, slug, featured) VALUES
 -- Handguns
 (1, 'Sig Sauer P320 M17', 'The official sidearm of the U.S. Armed Forces, featuring a coyote-tan PVD coated stainless steel slide with the same optic cut as the MHS.', 599.99, 15, 'sig_p320_m17.jpg', 'sig-sauer-p320-m17', TRUE),

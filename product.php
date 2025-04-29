@@ -1,19 +1,20 @@
 <?php
+require_once 'config.php';
 require_once 'database.php';
 
-if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {
+if (!isset($_GET['slug'])) {
     header("Location: products.php");
     exit();
 }
 
-$product_id = $_GET['product_id'];
+$slug = $_GET['slug'];
 
 try {
     $stmt = $conn->prepare("SELECT p.*, c.name AS category_name 
                            FROM products p 
                            JOIN categories c ON p.category_id = c.category_id 
-                           WHERE p.product_id = ?");
-    $stmt->execute([$product_id]);
+                           WHERE p.slug = ?");
+    $stmt->execute([$slug]);
     $product = $stmt->fetch();
     
     if (!$product) {
@@ -30,12 +31,14 @@ require 'includes/header.php';
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-6">
-            <img src="images/<?= htmlspecialchars($product['image']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($product['name']) ?>">
+            <img src="images/products/<?= htmlspecialchars($product['image']) ?>" class="img-fluid rounded" 
+                 alt="<?= htmlspecialchars($product['name']) ?>" 
+                 onerror="this.src='images/placeholder.jpg'">
         </div>
         <div class="col-md-6">
             <h1><?= htmlspecialchars($product['name']) ?></h1>
             <p class="h4 text-muted">Category: <?= htmlspecialchars($product['category_name']) ?></p>
-            <p class="h3 text-primary">$<?= number_format($product['price'], 2) ?></p>
+            <p class="h3 text-primary"><?= formatPrice($product['price']) ?></p>
             <p class="h5">Stock: <?= $product['stock'] ?></p>
             <hr>
             <p class="lead"><?= nl2br(htmlspecialchars($product['description'])) ?></p>
